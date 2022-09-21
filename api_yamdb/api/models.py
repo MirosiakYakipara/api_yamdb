@@ -62,6 +62,11 @@ class Title(models.Model):
         null=True,
         blank=True
     )
+    score = models.IntegerField(
+        verbose_name='Оценкв',
+        null=True,
+        default=None
+    )
 
     def __str__(self):
         return self.name
