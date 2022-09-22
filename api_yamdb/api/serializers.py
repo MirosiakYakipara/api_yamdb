@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from rest_framework.generics import get_object_or_404
+from rest_framework.exceptions import ValidationError
 
 from .models import Category, Genre, Title
 from reviews.models import Review
@@ -47,6 +49,15 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         fields = "__all__"
         model = Review
+
+    def validate(self, data):
+        author = self.context['request'].user
+        title_id = self.context['view'].kwargs.get('title_id')
+        title = get_object_or_404(Title, pk=title_id)
+        if self.context['request'].method == 'POST':
+            if Review.objects.filter(title=title, author=author).exists():
+                raise ValidationError('Its forrbiden to add more than one review to Title')
+        return data
 
 
 class CommentSerializer(serializers.ModelSerializer):
