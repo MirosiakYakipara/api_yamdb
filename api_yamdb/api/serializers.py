@@ -1,8 +1,9 @@
 from rest_framework import serializers
+from rest_framework.generics import get_object_or_404
+from rest_framework.exceptions import ValidationError
 
-from titles.models import Title
-from categories.models import Category
-from genres.models import Genre
+
+from reviews.models import Category, Genre, Title, Review
 
 
 class TitleSerializer(serializers.ModelSerializer):
@@ -34,13 +35,53 @@ class GenreSerializer(serializers.ModelSerializer):
         lookup_field = 'slug'
 
 
-class ReadOnlyTitleSerializer(serializers.ModelSerializer):
-    rating = serializers.IntegerField(
-        source='reviews__score__avg', read_only=True
+class ReviewSerializer(serializers.ModelSerializer):
+    author = serializers.SlugRelatedField(
+        slug_field="username",
+        read_only=True
     )
-    genre = GenreSerializer(many=True)
-    category = CategorySerializer()
+    title = serializers.SlugRelatedField(
+        slug_field='id',
+        read_only=True
+    )
+
+    class Meta:
+        fields = "__all__"
+        model = Review
+
+    def validate(self, data):
+        author = self.context['request'].user
+        title_id = self.context['view'].kwargs.get('title_id')
+        title = get_object_or_404(Title, pk=title_id)
+        if self.context['request'].method == 'POST':
+            if Review.objects.filter(title=title, author=author).exists():
+                raise ValidationError('Its forrbiden to add more than one review to Title')
+        return data
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    author = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field="username"
+    )
+    review = serializers.SlugRelatedField(
+        slug_field='id',
+        read_only=True
+    )
+
+    class Meta:
+        fields = "__all__"
+        model = Comment
+
+
+class ReadOnlyTitleSerializer(serializers.ModelSerializer):
+    rating = serializers.IntegerField(read_only=True
+    )
+    genre = GenreSerializer(read_only=True, many=True)
+    category = CategorySerializer(read_only=True)
 
     class Meta:
         model = Title
-        fields = '__all__'
+        fields = (
+            'id', 'name', 'year', 'category', 'description', 'rating', 'genre', 
+        )
