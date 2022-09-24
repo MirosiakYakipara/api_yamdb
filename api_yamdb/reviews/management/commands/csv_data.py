@@ -37,6 +37,7 @@ class Command(BaseCommand):
                 return
             start_uploading_data(self, filename)
 
+
 def start_uploading_data(self, filename):
     review_csv_file = pathlib.Path(settings.BASE_DIR).joinpath(
             'static/data/' + filename + '.csv')
@@ -56,7 +57,8 @@ def start_uploading_data(self, filename):
             upload_reviews(self, reader, filename)
         if filename == 'comments':
             upload_comments(self, reader, filename)
- 
+
+
 def upload_users(self, reader, filename):
     for row in reader:
         User.objects.get_or_create(id=row['id'],
@@ -76,6 +78,7 @@ def upload_titles(self, reader, filename):
                                         category=category)
     self.stdout.write(f'Succesuful uploaded from file {filename}.csv')
 
+
 def upload_reviews(self, reader, filename):
     for row in reader:
         title, status = Title.objects.get_or_create(id=row['title_id'])
@@ -92,12 +95,14 @@ def upload_reviews(self, reader, filename):
             self.stdout.write(f'{error} {row_id}')
     self.stdout.write(f'Succesuful uploaded from file {filename}.csv')
 
+
 def upload_genres(self, reader, filename):
     for row in reader:
         Genre.objects.get_or_create(id=row['id'],
                                         name=row['name'],
                                         slug=row['slug'])
     self.stdout.write(f'Succesuful uploaded from file {filename}.csv')
+
 
 def upload_genres_titles(self, reader, filename):
     for row in reader:
@@ -108,6 +113,7 @@ def upload_genres_titles(self, reader, filename):
                                         title=title,
                                         genre=genre)
     self.stdout.write(f'Succesuful uploaded from file {filename}.csv')
+
 
 def upload_comments(self, reader, filename):
     for row in reader:
@@ -120,8 +126,9 @@ def upload_comments(self, reader, filename):
                                         pub_date=row['pub_date'])
     self.stdout.write(f'Succesuful uploaded from file {filename}.csv')
 
+
 def upload_categories(self, reader, filename):
     for row in reader:
         Category.objects.get_or_create(id=row['id'],
-                                        name=row['name'],
-                                        slug=row['slug'])
+                                       name=row['name'],
+                                       slug=row['slug'])
