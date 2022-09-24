@@ -3,16 +3,17 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Avg
 
 
-from reviews.models import Category, Genre, Title, Review
+from reviews.models import Category, Genre, Title, Review, Comment
 
 
 from .permissions import IsAdminOrReadOnly, UserPermission
 from .mixins import ListCreateDestroyViewSet
-from .serializers import (CategorySerializer, GenreSerializer, 
-                         TitleSerializer, ReadOnlyTitleSerializer,
-                         ReviewSerializer, CommentSerializer)
-from reviews.models import Review
-from comments.models import Comment
+from .serializers import (CategorySerializer,
+                          GenreSerializer,
+                          TitleSerializer,
+                          ReadOnlyTitleSerializer,
+                          ReviewSerializer,
+                          CommentSerializer)
 
 
 class CategoryViewSet(ListCreateDestroyViewSet):
@@ -35,7 +36,7 @@ class GenreViewSet(ListCreateDestroyViewSet):
 
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all().annotate(
-        rating=Avg('reviews__score')
+        Avg('reviews__score')
     )
     serializer_class = TitleSerializer
     permission_classes = (IsAdminOrReadOnly,)

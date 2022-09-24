@@ -4,10 +4,7 @@ from django.conf import settings
 import pathlib
 from django.contrib.auth import get_user_model
 
-from reviews.models import Review
-from comments.models import Comment
-from genres_titles.models import GenreTitle
-from api.models import Title, Genre, Category
+from reviews.models import Review, Comment, GenreTitle, Title, Genre, Category
 
 User = get_user_model()
 FILENAMES = []
