@@ -2,11 +2,9 @@ from django.core.management.base import BaseCommand
 import csv
 from django.conf import settings
 import pathlib
-from django.contrib.auth import get_user_model
 
-from reviews.models import Review, Comment, GenreTitle, Title, Genre, Category
+from reviews.models import Review, Comment, GenreTitle, Title, Genre, Category, User
 
-User = get_user_model()
 FILENAMES = []
 FILENAMES.append('users')
 FILENAMES.append('category')
@@ -135,3 +133,4 @@ def upload_categories(self, reader, filename):
         Category.objects.get_or_create(id=row['id'],
                                        name=row['name'],
                                        slug=row['slug'])
+    self.stdout.write(f'Succesuful uploaded from file {filename}.csv')
