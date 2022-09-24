@@ -129,7 +129,7 @@ class Review(models.Model):
                                )
     text = models.TextField(max_length=1000)
     pub_date = models.DateTimeField(auto_now_add=True,
-                                   db_index=True)
+                                    db_index=True)
     score = models.IntegerField(blank=True,
                                 verbose_name='score',
                                 validators=[
@@ -138,8 +138,8 @@ class Review(models.Model):
                                 ]
                                 )
     title = models.ForeignKey(Title,
-                             on_delete=models.CASCADE,
-                             related_name='reviews')
+                              on_delete=models.CASCADE,
+                              related_name='reviews')
 
     class Meta:
         verbose_name = 'Отзыв'
@@ -159,14 +159,12 @@ class Comment(models.Model):
                                related_name="comments"
                                )
     review = models.ForeignKey(Review,
-                            on_delete=models.CASCADE,
-                            related_name="comments"
-                            )
+                               on_delete=models.CASCADE,
+                               related_name="comments")
     text = models.TextField(max_length=1000)
     pub_date = models.DateTimeField("Publication date",
-                                   auto_now_add=True,
-                                   db_index=True
-                                   )
+                                    auto_now_add=True,
+                                    db_index=True)
 
     class Meta:
         verbose_name = 'Комментарий'
