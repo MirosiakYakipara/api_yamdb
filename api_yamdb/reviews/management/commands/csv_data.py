@@ -3,7 +3,8 @@ import csv
 from django.conf import settings
 import pathlib
 
-from reviews.models import Review, Comment, GenreTitle, Title, Genre, Category, User
+from reviews.models import (Review, Comment, GenreTitle,
+                            Title, Genre, Category, User)
 
 FILENAMES = []
 FILENAMES.append('users')

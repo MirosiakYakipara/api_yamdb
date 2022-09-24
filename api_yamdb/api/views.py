@@ -132,7 +132,6 @@ class TitleViewSet(viewsets.ModelViewSet):
             return TitleSerializer
 
 
-
 class ReviewViewSet(ListCreateDestroyViewSet):
     serializer_class = ReviewSerializer
     permission_classes = (UserPermission,)
@@ -157,5 +156,7 @@ class CommentViewSet(viewsets.ModelViewSet):
         return new_queryset
 
     def perform_create(self, serializer):
-        review = get_object_or_404(Review, pk=self.kwargs.get("review_id"), title = self.kwargs.get('title_id'))
+        review = get_object_or_404(Review,
+                                   pk=self.kwargs.get("review_id"),
+                                   title=self.kwargs.get('title_id'))
         serializer.save(author=self.request.user, review=review)

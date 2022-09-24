@@ -78,7 +78,8 @@ class ReviewSerializer(serializers.ModelSerializer):
         title = get_object_or_404(Title, pk=title_id)
         if self.context['request'].method == 'POST':
             if Review.objects.filter(title=title, author=author).exists():
-                raise ValidationError('Its forrbiden to add more than one review to Title')
+                raise ValidationError('Its forrbiden to add'
+                                      ' more than one review to Title')
         return data
 
 
