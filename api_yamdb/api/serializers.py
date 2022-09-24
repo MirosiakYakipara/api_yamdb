@@ -2,9 +2,7 @@ from rest_framework import serializers
 from rest_framework.generics import get_object_or_404
 from rest_framework.exceptions import ValidationError
 
-from reviews.models import Category, Genre, Title, Review
-from comments.models import Comment
-
+from reviews.models import Category, Genre, Title, Review, Comment
 
 
 class TitleSerializer(serializers.ModelSerializer):
@@ -76,8 +74,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class ReadOnlyTitleSerializer(serializers.ModelSerializer):
-    rating = serializers.IntegerField(read_only=True
-    )
+    rating = serializers.IntegerField(read_only=True)
     genre = GenreSerializer(read_only=True, many=True)
     category = CategorySerializer(read_only=True)
 

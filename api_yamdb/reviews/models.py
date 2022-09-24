@@ -2,10 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
-
 from api.validators import validate_year
-
-
 
 User = get_user_model()
 
@@ -78,7 +75,7 @@ class Title(models.Model):
     )
     genre = models.ManyToManyField(
         Genre, 
-        verbose_name='Жанр'
+        verbose_name='Жанр',
         related_name='titles',
         blank=True, 
     )
@@ -113,10 +110,45 @@ class Review(models.Model):
                              related_name='reviews')
 
     class Meta:
-        app_label = 'reviews'
+        verbose_name = 'Отзыв'
+        verbose_name_plural = 'Отзывы'
+        ordering = ['pub_date']
         constraints = [
             models.UniqueConstraint(
                 fields=['title', 'author'],
                 name='unique_review'
             ),
         ]
+
+
+class Comment(models.Model):
+    author = models.ForeignKey(User,
+                               on_delete=models.CASCADE,
+                               related_name="comments"
+                               )
+    review = models.ForeignKey(Review,
+                            on_delete=models.CASCADE,
+                            related_name="comments"
+                            )
+    text = models.TextField(max_length=1000)
+    pub_date = models.DateTimeField("Publication date",
+                                   auto_now_add=True,
+                                   db_index=True
+                                   )
+
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
+        ordering = ['pub_date']
+
+
+class GenreTitle(models.Model):
+    title = models.ForeignKey(Title, on_delete=models.CASCADE)
+    genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return f'{self.genre} {self.title}'
+
+    class Meta:
+        verbose_name = 'Произведение и жанр'
+        verbose_name_plural = 'Произведения и жанры'
