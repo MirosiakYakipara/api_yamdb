@@ -2,14 +2,15 @@ from rest_framework import filters,  viewsets
 from django.shortcuts import get_object_or_404
 from django.db.models import Avg
 
+
 from reviews.models import Category, Genre, Title, Review
 
 
 from .permissions import IsAdminOrReadOnly, UserPermission
 from .mixins import ListCreateDestroyViewSet
 from .serializers import (CategorySerializer, GenreSerializer, 
-                         TitleSerializer, ReadOnlyTitleSerializer)
-from .serializers import ReviewSerializer, CommentSerializer
+                         TitleSerializer, ReadOnlyTitleSerializer,
+                         ReviewSerializer, CommentSerializer)
 from reviews.models import Review
 from comments.models import Comment
 
@@ -40,11 +41,11 @@ class TitleViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name','category__slug','genre__slug',)
-
     def get_serializer_class(self):
             if self.action in ( 'list'):
                 return ReadOnlyTitleSerializer
             return TitleSerializer
+
 
 
 class ReviewViewSet(ListCreateDestroyViewSet):
@@ -73,5 +74,3 @@ class CommentViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         review = get_object_or_404(Review, pk=self.kwargs.get("review_id"), title = self.kwargs.get('title_id'))
         serializer.save(author=self.request.user, review=review)
-
-    

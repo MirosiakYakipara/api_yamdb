@@ -23,7 +23,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'api',
+    'comments',
     'reviews',
+    'genres_titles',
 ]
 
 MIDDLEWARE = [
