@@ -5,9 +5,9 @@ certifi==2022.9.24
 charset-normalizer==2.0.12
 colorama==0.4.5
 Django==2.2.16
-django-filter==22.1
+django-filter==2.4.0
 djangorestframework==3.12.4
-djangorestframework-simplejwt
+djangorestframework-simplejwt==3.3
 djangorestframework-jwt
 idna==3.4
 iniconfig==1.1.1
