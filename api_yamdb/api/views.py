@@ -139,7 +139,8 @@ class TitleViewSet(viewsets.ModelViewSet):
             return ReadOnlyTitleSerializer
         return TitleSerializer
 
-class ReviewViewSet(ListCreateDestroyViewSet):
+
+class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
     permission_classes = (IsAdminModeratorOwnerOrReadOnly,)
 
