@@ -89,7 +89,7 @@ class Title(models.Model):
         validators=[validate_year]
     )
     category = models.ForeignKey(
-        Category, 
+        Category,
         verbose_name='Категория',
         on_delete=models.SET_NULL,
         related_name='titles',
@@ -106,10 +106,10 @@ class Title(models.Model):
         default=None,
     )
     genre = models.ManyToManyField(
-        Genre, 
+        Genre,
         verbose_name='Жанр',
         related_name='titles',
-        blank=True, 
+        blank=True,
     )
 
     def __str__(self):

@@ -2,8 +2,11 @@ from rest_framework import filters, viewsets, status
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
+
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework.pagination import PageNumberPagination
 
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
@@ -12,6 +15,8 @@ from django.contrib.auth.tokens import default_token_generator
 
 from reviews.models import Category, Genre, Title, Review, Comment, User
 
+
+from .filters import TitleFilter
 from .permissions import IsAdminOrReadOnly, UserPermission, IsAdmin
 from .mixins import ListCreateDestroyViewSet
 from .serializers import (CategorySerializer,
@@ -72,13 +77,14 @@ def get_token(request):
         return Response(success, status=status.HTTP_200_OK)
     bad = {
         'confirmation_code': 'Неверный код подтверждения!'
-    }     
+    }
     return Response(bad, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    pagination_class = PageNumberPagination
     permission_classes = (IsAdmin, )
     search_fields = ('username',)
     lookup_field = 'username'
@@ -124,13 +130,14 @@ class TitleViewSet(viewsets.ModelViewSet):
     )
     serializer_class = TitleSerializer
     permission_classes = (IsAdminOrReadOnly,)
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('name','category__slug','genre__slug',)
-    def get_serializer_class(self):
-            if self.action in ( 'list'):
-                return ReadOnlyTitleSerializer
-            return TitleSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = TitleFilter
+    search_fields = ('name', 'category__slug', 'genre__slug',)
 
+    def get_serializer_class(self):
+        if self.action in ('list', 'retrieve'):
+            return ReadOnlyTitleSerializer
+        return TitleSerializer
 
 class ReviewViewSet(ListCreateDestroyViewSet):
     serializer_class = ReviewSerializer
