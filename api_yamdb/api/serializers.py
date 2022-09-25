@@ -2,14 +2,36 @@ from rest_framework import serializers
 from rest_framework.generics import get_object_or_404
 from rest_framework.exceptions import ValidationError
 
-from reviews.models import Category, Genre, Title, Review
-from comments.models import Comment
+from reviews.models import Category, Genre, Title, Review, Comment, User
 
+
+class CreateUserSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    email = serializers.EmailField()
+
+
+class ObitainTokenSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    confirmation_code = serializers.CharField()
+
+
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = (
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'bio',
+            'role',
+        )
 
 
 class TitleSerializer(serializers.ModelSerializer):
     genre = serializers.SlugRelatedField(
-        slug_field='slug', queryset=Genre.objects.all()
+        slug_field='slug', many=True, queryset=Genre.objects.all()
     )
     category = serializers.SlugRelatedField(
         slug_field='slug', queryset=Category.objects.all()
@@ -56,7 +78,8 @@ class ReviewSerializer(serializers.ModelSerializer):
         title = get_object_or_404(Title, pk=title_id)
         if self.context['request'].method == 'POST':
             if Review.objects.filter(title=title, author=author).exists():
-                raise ValidationError('Its forrbiden to add more than one review to Title')
+                raise ValidationError('Its forrbiden to add'
+                                      ' more than one review to Title')
         return data
 
 
@@ -76,13 +99,12 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class ReadOnlyTitleSerializer(serializers.ModelSerializer):
-    rating = serializers.IntegerField(read_only=True
-    )
+    rating = serializers.IntegerField(read_only=True)
     genre = GenreSerializer(read_only=True, many=True)
     category = CategorySerializer(read_only=True)
 
     class Meta:
         model = Title
         fields = (
-            'id', 'name', 'year', 'category', 'description', 'rating', 'genre', 
+            'id', 'name', 'year', 'category', 'description', 'rating', 'genre',
         )
