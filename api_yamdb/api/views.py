@@ -17,7 +17,7 @@ from reviews.models import Category, Genre, Title, Review, Comment, User
 
 
 from .filters import TitleFilter
-from .permissions import IsAdminOrReadOnly, UserPermission, IsAdmin
+from .permissions import IsAdminOrReadOnly, IsAdminModeratorOwnerOrReadOnly, IsAdmin
 from .mixins import ListCreateDestroyViewSet
 from .serializers import (CategorySerializer,
                           GenreSerializer,
@@ -141,7 +141,7 @@ class TitleViewSet(viewsets.ModelViewSet):
 
 class ReviewViewSet(ListCreateDestroyViewSet):
     serializer_class = ReviewSerializer
-    permission_classes = (UserPermission,)
+    permission_classes = (IsAdminModeratorOwnerOrReadOnly,)
 
     def get_queryset(self):
         title_id = self.kwargs.get("title_id")
@@ -155,7 +155,7 @@ class ReviewViewSet(ListCreateDestroyViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
-    permission_classes = (UserPermission,)
+    permission_classes = (IsAdminModeratorOwnerOrReadOnly,)
 
     def get_queryset(self):
         review_id = self.kwargs.get("review_id")
