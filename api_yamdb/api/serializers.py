@@ -28,7 +28,7 @@ class CreateUserSerializer(serializers.Serializer):
         model = User
 
 
-class ObitainTokenSerializer(serializers.Serializer):
+class ObtainTokenSerializer(serializers.Serializer):
     username = serializers.CharField()
     confirmation_code = serializers.CharField()
 
@@ -117,7 +117,9 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class ReadOnlyTitleSerializer(serializers.ModelSerializer):
-    rating = serializers.IntegerField(read_only=True)
+    rating = serializers.IntegerField(
+        source='reviews__score__avg', read_only=True
+    )
     genre = GenreSerializer(read_only=True, many=True)
     category = CategorySerializer(read_only=True)
 

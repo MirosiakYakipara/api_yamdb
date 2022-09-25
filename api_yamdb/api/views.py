@@ -17,7 +17,9 @@ from reviews.models import Category, Genre, Title, Review, Comment, User
 
 
 from .filters import TitleFilter
-from .permissions import IsAdminOrReadOnly, IsAdminModeratorOwnerOrReadOnly, IsAdmin
+from .permissions import (IsAdminOrReadOnly,
+                          IsAdminModeratorOwnerOrReadOnly,
+                          IsAdmin)
 from .mixins import ListCreateDestroyViewSet
 from .serializers import (CategorySerializer,
                           GenreSerializer,
@@ -27,7 +29,7 @@ from .serializers import (CategorySerializer,
                           CommentSerializer,
                           UserSerializer,
                           CreateUserSerializer,
-                          ObitainTokenSerializer,)
+                          ObtainTokenSerializer,)
 
 
 @api_view(["POST"])
@@ -60,7 +62,7 @@ def create_user(request):
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def get_token(request):
-    serializer = ObitainTokenSerializer(data=request.data)
+    serializer = ObtainTokenSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     username = serializer.validated_data['username']
     confirmation_code = serializer.validated_data['confirmation_code']
