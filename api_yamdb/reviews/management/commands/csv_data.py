@@ -1,10 +1,10 @@
-from django.core.management.base import BaseCommand
 import csv
-from django.conf import settings
 import pathlib
 
-from reviews.models import (Review, Comment, GenreTitle,
-                            Title, Genre, Category, User)
+from django.conf import settings
+from django.core.management.base import BaseCommand
+from reviews.models import (Category, Comment, Genre, GenreTitle, Review,
+                            Title, User)
 
 FILENAMES = []
 FILENAMES.append('users')

@@ -1,8 +1,8 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from .views import (CategoryViewSet, GenreViewSet, TitleViewSet, ReviewViewSet,
-                    CommentViewSet, UserViewSet, MeViewSet, create_user,
+from .views import (CategoryViewSet, CommentViewSet, GenreViewSet, MeViewSet,
+                    ReviewViewSet, TitleViewSet, UserViewSet, create_user,
                     get_token)
 
 auth_patterns = [
