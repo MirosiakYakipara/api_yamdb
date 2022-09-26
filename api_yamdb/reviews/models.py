@@ -132,13 +132,14 @@ class Review(models.Model):
     text = models.TextField(max_length=1000)
     pub_date = models.DateTimeField(auto_now_add=True,
                                     db_index=True)
-    score = models.IntegerField(blank=True,
-                                verbose_name='score',
-                                validators=[
-                                    MinValueValidator(1, 'From 1 to 10'),
-                                    MaxValueValidator(10, 'From 1 to 10')
-                                ]
-                                )
+    score = models.PositiveSmallIntegerField(
+        blank=True,
+        verbose_name='score',
+        validators=[
+            MinValueValidator(1, 'From 1 to 10'),
+            MaxValueValidator(10, 'From 1 to 10')
+        ]
+    )
     title = models.ForeignKey(Title,
                               on_delete=models.CASCADE,
                               related_name='reviews')

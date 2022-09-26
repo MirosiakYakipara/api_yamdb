@@ -17,8 +17,6 @@ class IsAdmin(permissions.BasePermission):
 
 class IsAdminModeratorOwnerOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
-        # if request.method == 'PATCH':
-        #     return True
         return (request.method in permissions.SAFE_METHODS
                 or request.user.is_authenticated)
 
