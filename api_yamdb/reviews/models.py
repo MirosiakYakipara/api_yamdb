@@ -50,13 +50,13 @@ class Genre(models.Model):
         unique=True
     )
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         verbose_name = 'Жанр'
         verbose_name_plural = 'Жанры'
-        ordering = ['name']
+        ordering = ('name',)
+
+    def __str__(self):
+        return self.name
 
 
 class Category(models.Model):
@@ -70,13 +70,13 @@ class Category(models.Model):
         unique=True
     )
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
-        ordering = ['name']
+        ordering = ('name',)
+
+    def __str__(self):
+        return self.name
 
 
 class Title(models.Model):
@@ -86,7 +86,9 @@ class Title(models.Model):
     )
     year = models.IntegerField(
         verbose_name='Дата публикации',
-        validators=[validate_year]
+        validators=[validate_year],
+        db_index=True, null=True,
+        blank=True
     )
     category = models.ForeignKey(
         Category,
@@ -112,13 +114,13 @@ class Title(models.Model):
         blank=True,
     )
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         verbose_name = 'Произведение'
         verbose_name_plural = 'Произведения'
-        ordering = ['name']
+        ordering = ('name',)
+
+    def __str__(self):
+        return self.name
 
 
 class Review(models.Model):
