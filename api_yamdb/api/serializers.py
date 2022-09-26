@@ -114,7 +114,7 @@ class CommentSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        fields = ('authoe', 'review', 'text', 'pub_date')
+        fields = ('author', 'review', 'text', 'pub_date')
         model = Comment
 
 
