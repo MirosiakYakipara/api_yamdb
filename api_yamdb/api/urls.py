@@ -22,6 +22,8 @@ router.register(r'titles/(?P<title_id>\d+)/reviews/(?P<review_id>\d+)'
 
 urlpatterns = [
     path('v1/auth/', include(auth_patterns)),
-    path('v1/users/me/', MeViewSet.as_view()),
+    path('v1/users/me/', MeViewSet.as_view({
+        'get': 'get_user',
+        'patch': 'patch_user'})),
     path('v1/', include(router.urls)),
 ]

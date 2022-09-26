@@ -4,12 +4,11 @@ from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, status, viewsets
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.pagination import (LimitOffsetPagination,
                                        PageNumberPagination)
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import AccessToken
 from reviews.models import Category, Genre, Review, Title, User
 
@@ -83,15 +82,17 @@ class UserViewSet(viewsets.ModelViewSet):
     lookup_field = 'username'
 
 
-class MeViewSet(APIView):
+class MeViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated, )
 
-    def get(self, request):
+    @action(detail=True)
+    def get_user(self, request):
         user = request.user
         serializer = UserSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def patch(self, request):
+    @action(detail=True, methods=['patch'])
+    def patch_user(self, request):
         user = request.user
         serializer = UserSerializer(user, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
