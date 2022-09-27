@@ -3,17 +3,17 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
-USER = 'user'
-MODERATOR = 'moderator'
-ADMIN = 'admin'
-ROLE_CHOICES = (
-    (USER, 'User'),
-    (MODERATOR, 'Moderator'),
-    (ADMIN, 'Admin')
-)
-
 
 class User(AbstractUser):
+    USER = 'user'
+    MODERATOR = 'moderator'
+    ADMIN = 'admin'
+    ROLE_CHOICES = (
+        (USER, 'User'),
+        (MODERATOR, 'Moderator'),
+        (ADMIN, 'Admin')
+    )
+
     first_name = models.TextField(
         'Имя',
         max_length=150,
@@ -27,7 +27,7 @@ class User(AbstractUser):
     )
     role = models.CharField(
         'Роль',
-        max_length=10,
+        max_length=30,
         choices=ROLE_CHOICES,
         default=USER
     )
@@ -36,6 +36,14 @@ class User(AbstractUser):
         max_length=254,
         blank=True,
     )
+
+    @property
+    def is_moderator(self):
+        return self.role == 'moderator'
+
+    @property
+    def is_admin(self):
+        return self.role == 'admin'
 
 
 class Genre(models.Model):
