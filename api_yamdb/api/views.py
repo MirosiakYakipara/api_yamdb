@@ -81,22 +81,25 @@ class UserViewSet(viewsets.ModelViewSet):
     search_fields = ('username',)
     lookup_field = 'username'
 
-
-class MeViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated, )
-
-    @action(detail=True)
-    def get_user(self, request):
+    @action(
+        detail=False,
+        methods=['get', 'patch'],
+        permission_classes=(IsAuthenticated, ),
+        serializer_class=UserSerializer,
+        url_path='me'
+    )
+    def profile_user(self, request):
         user = request.user
-        serializer = UserSerializer(user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    @action(detail=True, methods=['patch'])
-    def patch_user(self, request):
-        user = request.user
-        serializer = UserSerializer(user, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(role=user.role)
+        if request.method == 'PATCH':
+            serializer = self.serializer_class(
+                user,
+                data=request.data,
+                partial=True
+            )
+            serializer.is_valid(raise_exception=True)
+            serializer.save(role=user.role)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        serializer = self.serializer_class(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
