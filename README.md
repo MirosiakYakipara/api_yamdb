@@ -62,3 +62,9 @@ python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
 ```
+***
+## Контакты
+
+Никита Зотов - nz030432@gmail.com
+
+Ссылка на проект: [https://github.com/MirosiakYakipara/hw05_final](https://github.com/MirosiakYakipara/hw05_final)
